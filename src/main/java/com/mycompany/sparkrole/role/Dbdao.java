@@ -94,11 +94,11 @@ public class Dbdao {
 
     }
 
-    public Role getRole(int id) {
+    public Optional<Role> getRole(int id) {
         Role role = null;
-//        System.out.println(role);
-//        Optional<Role> roleOpt = Optional.ofNullable(role);
-//        System.out.println(roleOpt.isEmpty());
+        //        System.out.println(role);
+        //        Optional<Role> roleOpt = Optional.ofNullable(role);
+        //        System.out.println(roleOpt.isEmpty());
         try (Connection con = DriverManager.getConnection(connectionURL);
              PreparedStatement preparedStmt = con.prepareStatement(
                      new StringBuilder().append(
@@ -146,7 +146,7 @@ public class Dbdao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return role;
+        return Optional.ofNullable(role);
 
     }
 

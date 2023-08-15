@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import spark.Request;
 import spark.Response;
@@ -29,10 +31,11 @@ public class RoleController {
         return new Gson().toJson(roles);
     }
 
-    public String getRole(Request request, Response response) {
+    public String getRole(Request request, Response response) throws NoSuchElementException {
         response.type("application/json");
         int id = Integer.parseInt(request.params(":id"));
-        Role role = db.getRole(id);
+        Optional<Role> optRole = db.getRole(id);
+        Role role = optRole.orElseThrow();
 //        Map<Role, List<Permissions>> rolePermissions = db.getBook(id);
         return new Gson().toJson(role);
     }
