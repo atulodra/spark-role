@@ -1,0 +1,5 @@
+com\mycompany\sparkrole\role\RoleController.class
+com\mycompany\sparkrole\role\Role.class
+com\mycompany\sparkrole\role\Dbdao.class
+com\mycompany\sparkrole\role\Permissions.class
+com\mycompany\sparkrole\Sparkrole.class
