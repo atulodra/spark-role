@@ -39,11 +39,11 @@ public class Dbdao {
                              "SELECT roles.id, roles.name, permissions.id, permissions.section, permissions.operation, permissions.description ")
                              .append("From roles ")
                              .append(
-                                     "INNER JOIN role_permissions ")
+                                     "LEFT OUTER JOIN role_permissions ")
                              .append(
                                      "ON roles.id = role_permissions.role_id ")
                              .append(
-                                     "INNER JOIN permissions ")
+                                     "LEFT OUTER JOIN permissions ")
                              .append(
                                      "ON role_permissions.permissions_id = permissions.id;")
                              .toString());
@@ -62,34 +62,37 @@ public class Dbdao {
                                                             "operation"),
                                             resultSet.getString("description")));
                 } else {
-                    rolePermissions.put(resultSet.getInt("id"), new Role(
-                                        resultSet.getInt("id"), resultSet
-                                        .getString(
-                                                "name"), new Permissions(
-                                                resultSet.getInt(
-                                                        "permissions.id"),
-                                                resultSet.getString(
-                                                        "section"), resultSet
-                                                        .getString(
-                                                                "operation"),
-                                                resultSet.getString(
-                                                        "description"))));
+                    if (resultSet.getInt("permissions.id") == 0) {
+                        rolePermissions.put(resultSet.getInt("id"), new Role(
+                                            resultSet.getInt("id"), resultSet
+                                            .getString(
+                                                    "name")));
+
+                    } else {
+                        rolePermissions.put(resultSet.getInt("id"), new Role(
+                                            resultSet.getInt("id"), resultSet
+                                            .getString(
+                                                    "name"), new Permissions(
+                                                    resultSet.getInt(
+                                                            "permissions.id"),
+                                                    resultSet.getString(
+                                                            "section"),
+                                                    resultSet
+                                                            .getString(
+                                                                    "operation"),
+                                                    resultSet.getString(
+                                                            "description"))));
+                    }
+
                 }
 
-//                permissions.add(new Permissions(
-//                        resultSet.getInt("permissions.id"),
-//                        resultSet.getString(
-//                                "section"), resultSet.getString("operation"),
-//                        resultSet.getString("description")));
-//                role = new Role(resultSet.getInt("id"), resultSet.getString(
-//                        "name"), permissions);
-//                roles.add(role);
-//                rolePermissions.put(role.getId(), role);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 //        System.out.println(new HashSet<>(roles));
+        System.out.println(rolePermissions.get(2)
+                .getPermissions());
         return new ArrayList<>(rolePermissions.values());
 
     }
@@ -148,6 +151,32 @@ public class Dbdao {
         }
         return Optional.ofNullable(role);
 
+    }
+
+    public void insertRole(Role role) throws SQLException {
+        try (Connection con = DriverManager.getConnection(connectionURL);
+             PreparedStatement preparedStmt = con.prepareStatement(
+                     "INSERT INTO roles Values(default, ?)");) {
+            preparedStmt.setString(1, role.getName());
+            preparedStmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new SQLException(e);
+        }
+    }
+
+    public void deleteRole(int id) throws SQLException {
+        try (Connection con = DriverManager.getConnection(connectionURL);
+             PreparedStatement preparedStmt = con.prepareStatement(
+                     "DELETE FROM roles WHERE id = ?");) {
+//            preparedStmt.setString(1, "title");
+            preparedStmt.setInt(1, id);
+            preparedStmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new SQLException(e);
+        }
     }
 
 }
