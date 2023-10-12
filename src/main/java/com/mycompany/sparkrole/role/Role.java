@@ -4,6 +4,7 @@
  */
 package com.mycompany.sparkrole.role;
 
+import com.mycompany.sparkrole.permissions.Permissions;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +15,9 @@ import java.util.List;
 public class Role {
 
     private int id;
+
     private String name;
     private List<Permissions> permissions = new ArrayList<>();
-//    private List<Integer> permIds = new ArrayList<>();
 
     Role() {
 
@@ -31,7 +32,7 @@ public class Role {
         this.name = name;
     }
 
-    Role(int id, String name, Permissions permission) {
+    public Role(int id, String name, Permissions permission) {
         this.id = id;
         this.name = name;
         this.permissions.add(permission);
@@ -73,12 +74,14 @@ public class Role {
         return permissions;
     }
 
-//    public List<Integer> getPermissionIds() {
-//        for (Permissions permission : permissions) {
-//            permIds.add(permission.getId());
-//        }
-//        return permIds;
-//    }
+    public Boolean permissionChecker(int id) {
+        List<Integer> permissionsIds = new ArrayList<>();
+        for (Permissions permission : permissions) {
+            permissionsIds.add(permission.getId());
+        }
+        return permissionsIds.contains(id);
+    }
+
     public void addToPermissions(Permissions permission) {
         this.permissions.add(permission);
     }

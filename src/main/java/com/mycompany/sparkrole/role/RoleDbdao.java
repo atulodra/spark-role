@@ -4,28 +4,26 @@
  */
 package com.mycompany.sparkrole.role;
 
+import com.mycompany.sparkrole.permissions.Permissions;
+import com.mycompany.sparkrole.dbconnection.DbConnection;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  *
  * @author AVShrez
  */
-public class Dbdao {
+public class RoleDbdao {
 
     // Database properties
-    private final String connectionURL = "jdbc:mysql://localhost:3306/testdb?user=root&password=whatapassword";
-
+//    private final String connectionURL = "jdbc:mysql://localhost:3306/testdb?user=root&password=whatapassword";
     //Internal properties
     private final Map<Integer, Role> rolePermissions = new HashMap<>();
     private final List<Permissions> permissions = new ArrayList<>();
@@ -33,7 +31,8 @@ public class Dbdao {
 
     public List<Role> getRoles() {
 //        Role role;
-        try (Connection con = DriverManager.getConnection(connectionURL);
+        try (Connection con = DbConnection.getInstance()
+                .getConnection();
              PreparedStatement preparedStmt = con.prepareStatement(
                      new StringBuilder().append(
                              "SELECT roles.id, roles.name, permissions.id, permissions.section, permissions.operation, permissions.description ")
@@ -55,33 +54,43 @@ public class Dbdao {
                     rolePermissions.get(resultSet.getInt("id"))
                             .addToPermissions(
                                     new Permissions(
-                                            resultSet.getInt("permissions.id"),
+                                            resultSet.getInt(
+                                                    "permissions.id"),
                                             resultSet.getString(
                                                     "section"), resultSet
                                                     .getString(
                                                             "operation"),
-                                            resultSet.getString("description")));
+                                            resultSet.getString(
+                                                    "description")));
                 } else {
                     if (resultSet.getInt("permissions.id") == 0) {
-                        rolePermissions.put(resultSet.getInt("id"), new Role(
-                                            resultSet.getInt("id"), resultSet
-                                            .getString(
-                                                    "name")));
-
-                    } else {
-                        rolePermissions.put(resultSet.getInt("id"), new Role(
-                                            resultSet.getInt("id"), resultSet
-                                            .getString(
-                                                    "name"), new Permissions(
-                                                    resultSet.getInt(
-                                                            "permissions.id"),
-                                                    resultSet.getString(
-                                                            "section"),
+                        rolePermissions.put(resultSet.getInt("id"),
+                                            new Role(
+                                                    resultSet.getInt("id"),
                                                     resultSet
                                                             .getString(
-                                                                    "operation"),
-                                                    resultSet.getString(
-                                                            "description"))));
+                                                                    "name")));
+
+                    } else {
+                        rolePermissions.put(resultSet.getInt("id"),
+                                            new Role(
+                                                    resultSet.getInt("id"),
+                                                    resultSet
+                                                            .getString(
+                                                                    "name"),
+                                                    new Permissions(
+                                                            resultSet
+                                                                    .getInt(
+                                                                            "permissions.id"),
+                                                            resultSet
+                                                                    .getString(
+                                                                            "section"),
+                                                            resultSet
+                                                                    .getString(
+                                                                            "operation"),
+                                                            resultSet
+                                                                    .getString(
+                                                                            "description"))));
                     }
 
                 }
@@ -90,9 +99,6 @@ public class Dbdao {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-//        System.out.println(new HashSet<>(roles));
-        System.out.println(rolePermissions.get(2)
-                .getPermissions());
         return new ArrayList<>(rolePermissions.values());
 
     }
@@ -102,7 +108,8 @@ public class Dbdao {
         //        System.out.println(role);
         //        Optional<Role> roleOpt = Optional.ofNullable(role);
         //        System.out.println(roleOpt.isEmpty());
-        try (Connection con = DriverManager.getConnection(connectionURL);
+        try (Connection con = DbConnection.getInstance()
+                .getConnection();
              PreparedStatement preparedStmt = con.prepareStatement(
                      new StringBuilder().append(
                              "SELECT roles.id, roles.name, permissions.id, permissions.section, permissions.operation, permissions.description ")
@@ -129,7 +136,8 @@ public class Dbdao {
                                                 resultSet.getInt(
                                                         "permissions.id"),
                                                 resultSet.getString(
-                                                        "section"), resultSet
+                                                        "section"),
+                                                resultSet
                                                         .getString(
                                                                 "operation"),
                                                 resultSet.getString(
@@ -154,7 +162,8 @@ public class Dbdao {
     }
 
     public void insertRole(Role role) throws SQLException {
-        try (Connection con = DriverManager.getConnection(connectionURL);
+        try (Connection con = DbConnection.getInstance()
+                .getConnection();
              PreparedStatement preparedStmt = con.prepareStatement(
                      "INSERT INTO roles Values(default, ?)");) {
             preparedStmt.setString(1, role.getName());
@@ -167,11 +176,25 @@ public class Dbdao {
     }
 
     public void deleteRole(int id) throws SQLException {
-        try (Connection con = DriverManager.getConnection(connectionURL);
+        try (Connection con = DbConnection.getInstance()
+                .getConnection();
              PreparedStatement preparedStmt = con.prepareStatement(
                      "DELETE FROM roles WHERE id = ?");) {
-//            preparedStmt.setString(1, "title");
             preparedStmt.setInt(1, id);
+            preparedStmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new SQLException(e);
+        }
+    }
+
+    public void editRole(int id, Role role) throws SQLException {
+        try (Connection con = DbConnection.getInstance()
+                .getConnection();
+             PreparedStatement preparedStmt = con.prepareStatement(
+                     "UPDATE roles SET name = ? WHERE id = ?");) {
+            preparedStmt.setString(1, role.getName());
+            preparedStmt.setInt(2, id);
             preparedStmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.sparkrole.role;
+package com.mycompany.sparkrole.permissions;
 
 /**
  *
@@ -18,8 +18,8 @@ public class Permissions {
     Permissions() {
     }
 
-    Permissions(int id, String section, String operation,
-            String description) {
+    public Permissions(int id, String section, String operation,
+                       String description) {
         this.id = id;
         this.section = section;
         this.operation = operation;

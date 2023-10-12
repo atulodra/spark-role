@@ -1,5 +1,13 @@
 com\mycompany\sparkrole\role\RoleController.class
+com\mycompany\sparkrole\utils\validators\PasswordValidator.class
+com\mycompany\sparkrole\operator\Operator.class
+config\Config.class
+com\mycompany\sparkrole\operator\OperatorDbdao.class
 com\mycompany\sparkrole\role\Role.class
-com\mycompany\sparkrole\role\Dbdao.class
-com\mycompany\sparkrole\role\Permissions.class
+com\mycompany\sparkrole\utils\validators\EmailValidator.class
+com\mycompany\sparkrole\permissions\Permissions.class
+com\mycompany\sparkrole\utils\validators\OperatorValidator.class
 com\mycompany\sparkrole\Sparkrole.class
+com\mycompany\sparkrole\dbconnection\DbConnection.class
+com\mycompany\sparkrole\operator\OperatorController.class
+com\mycompany\sparkrole\role\RoleDbdao.class

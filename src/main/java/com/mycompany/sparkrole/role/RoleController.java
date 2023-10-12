@@ -5,13 +5,11 @@
 package com.mycompany.sparkrole.role;
 
 import com.google.gson.Gson;
+import com.mycompany.sparkrole.operator.Operator;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 import spark.Request;
 import spark.Response;
 
@@ -21,16 +19,30 @@ import spark.Response;
  */
 public class RoleController {
 
-    private final Dbdao db = new Dbdao();
+    private final RoleDbdao db = new RoleDbdao();
 
     public String getRoles(Request request, Response response) {
+        int permissionId = 1001;
         response.type("application/json");
+        Operator loggedInOperator = request.session()
+                .attribute("loggedInOperator");
+        if (!loggedInOperator.getRole()
+                .permissionChecker(permissionId)) {
+            return new Gson().toJson("You don't have the permission!");
+        }
         List<Role> roles = db.getRoles();
         return new Gson().toJson(roles);
     }
 
     public String getRole(Request request, Response response) throws NoSuchElementException {
+        int permissionId = 1001;
         response.type("application/json");
+        Operator loggedInOperator = request.session()
+                .attribute("loggedInOperator");
+        if (!loggedInOperator.getRole()
+                .permissionChecker(permissionId)) {
+            return new Gson().toJson("You don't have the permission!");
+        }
         int id = Integer.parseInt(request.params(":id"));
         Optional<Role> optRole = db.getRole(id);
         Role role = optRole.orElseThrow();
@@ -38,7 +50,14 @@ public class RoleController {
     }
 
     public String insertRole(Request request, Response response) {
+        int permissionId = 1002;
         response.type("application/json");
+        Operator loggedInOperator = request.session()
+                .attribute("loggedInOperator");
+        if (!loggedInOperator.getRole()
+                .permissionChecker(permissionId)) {
+            return new Gson().toJson("You don't have the permission!");
+        }
         Role role = new Gson().fromJson(request.body(), Role.class);
         try {
             db.insertRole(role);
@@ -51,10 +70,37 @@ public class RoleController {
     }
 
     public String deleteRole(Request request, Response response) {
+        int permissionId = 1003;
         response.type("application/json");
+        Operator loggedInOperator = request.session()
+                .attribute("loggedInOperator");
+        if (!loggedInOperator.getRole()
+                .permissionChecker(permissionId)) {
+            return new Gson().toJson("You don't have the permission!");
+        }
         int id = Integer.parseInt(request.params(":id"));
         try {
             db.deleteRole(id);
+        } catch (SQLException e) {
+            response.status(500);
+            return "{ ERROR, Role Could Not Be Deleted }";
+        }
+        return "{ SUCCESS, Role Deleted }";
+    }
+
+    public String editRole(Request request, Response response) {
+        int permissionId = 1004;
+        response.type("application/json");
+        Operator loggedInOperator = request.session()
+                .attribute("loggedInOperator");
+        if (!loggedInOperator.getRole()
+                .permissionChecker(permissionId)) {
+            return new Gson().toJson("You don't have the permission!");
+        }
+        int id = Integer.parseInt(request.params(":id"));
+        Role role = new Gson().fromJson(request.body(), Role.class);
+        try {
+            db.editRole(id, role);
         } catch (SQLException e) {
             response.status(500);
             return "{ ERROR, Role Could Not Be Deleted }";

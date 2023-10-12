@@ -1,5 +1,13 @@
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\permissions\Permissions.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\config\Config.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\operator\OperatorController.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\operator\OperatorDbdao.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\role\RoleDbdao.java
 C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\Sparkrole.java
 C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\role\RoleController.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\utils\validators\OperatorValidator.java
 C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\role\Role.java
-C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\role\Permissions.java
-C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\role\Dbdao.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\dbconnection\DbConnection.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\operator\Operator.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\utils\validators\PasswordValidator.java
+C:\Users\AVShrez\Documents\NetBeansProjects\sparkrole\src\main\java\com\mycompany\sparkrole\utils\validators\EmailValidator.java
